@@ -1,0 +1,13 @@
+{
+  "name": "blogging-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd server && pnpm install && pnpm run build",
+    "start": "cd server && pnpm start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
