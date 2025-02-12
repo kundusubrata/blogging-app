@@ -1,4 +1,3 @@
-import React from "react";
 import { useParams } from "react-router-dom";
 import {
   Card,
@@ -7,47 +6,69 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { data } from "../../../data";
+import MetaData from "./MetaData";
+import { useGetSinglePostQuery } from "@/redux/api/postApi";
+import Loader from "./Loader";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { FormatDate } from "@/utils/FormatDate";
+import LikeButton from "./LikeButton";
+import CommentSection from "./CommentSection";
 
 type Params = {
   id: string;
 };
 
-const BlogDetails: React.FC = () => {
-  const params = useParams<Params>();
-  const blogId = Number(params?.id);
+const BlogDetails = () => {
+  const { id } = useParams<Params>();
 
-  const blogDetails = data;
-  const blog = blogDetails.find((blog) => blog.id === blogId);
-  const { title, author, date, views, content } = blog || {
-    title: "",
-    author: "",
-    date: "",
-    views: 0,
-    content: "",
-  };
+  const { data, isLoading, isError, error } = useGetSinglePostQuery(id ?? skipToken);
+
+  // console.log(id);
+  // console.log(data);
+  // console.log(data?.post?.updatedAt);
+
+
+  // if(error) return <p>Error in Fetching</p>
+  useEffect(() => {
+    if(isError) {
+      if ('data' in error) {
+        toast.error((error.data as { message?: string })?.message || 'An error occurred');
+      } else {
+        toast.error('An unexpected error occurred');
+      }
+    }
+  }, [isError, error])
+  if(isLoading) return <Loader />
+
   return (
-    <div>
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <h1 className="text-2xl">{title}</h1>
-          </CardTitle>
-          <CardDescription>
-            <div className="flex flex-wrap gap-2">
-              <p>{author} | </p>
-              <p>{date} | </p>
-              <p>{views} Views</p>
+    <>
+      <MetaData title={data?.post?.title || "Post Title"} />
+      <div>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <h1 className="text-2xl">{data?.post?.title}</h1>
+            </CardTitle>
+            <CardDescription>
+              <div className="flex flex-wrap gap-2">
+                <p>{data?.post?.author?.firstname} {data?.post?.author?.lastname} | </p>
+                <p>{FormatDate(data?.post?.updatedAt as string)} | </p>
+                <p>{data?.post?._count?.likes} likes</p>
+              </div>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div>
+              <p>{data?.post?.content}</p>
+              <LikeButton postId={data?.post?.id || ""} />
             </div>
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div>
-            <p>{content}</p>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+          </CardContent>
+        </Card>
+        <CommentSection postId={data?.post?.id || ""} />
+      </div>
+    </>
   );
 };
 

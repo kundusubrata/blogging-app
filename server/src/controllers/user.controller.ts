@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
 import { asyncHandler } from "../middlewares/asyncHandler";
-import { signinBody, signupBody, updateProfileBody } from "../utils/zodValidations";
+import {
+  signinBody,
+  signupBody,
+  updateProfileBody,
+} from "../utils/zodValidations";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import CustomErrorHandler from "../utils/customErrorHandler";
@@ -137,10 +141,6 @@ export const myProfile = asyncHandler(
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: {
-        firstname: true,
-        lastname: true,
-      },
     });
 
     if (!user) {
@@ -163,7 +163,7 @@ export const updateProfile = asyncHandler(
       return next(new CustomErrorHandler("User not authenticated", 401));
     }
 
-    const {success,data} = updateProfileBody.safeParse(req.body);
+    const { success, data } = updateProfileBody.safeParse(req.body);
 
     if (!success) {
       return next(new CustomErrorHandler("Invalid input", 400));
@@ -171,10 +171,11 @@ export const updateProfile = asyncHandler(
 
     const user = await prisma.user.update({
       where: { id: userId },
-      data:{
+      data: {
         firstname: data.firstname,
         lastname: data.lastname,
-      }
+        email: data.email,
+      },
     });
 
     if (!user) {

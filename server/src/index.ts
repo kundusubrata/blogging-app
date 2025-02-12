@@ -2,6 +2,8 @@ import express from "express";
 import "dotenv/config";
 import userRoutes from "./routes/user.routes";
 import postRoutes from "./routes/post.routes"
+import likeRoutes from "./routes/like.routes"
+import commentRoutes from "./routes/comment.routes"
 import cookieParser from "cookie-parser";
 import { globalErrorMiddleware } from "./middlewares/globalErrorMiddleware";
 
@@ -16,6 +18,8 @@ app.use(cookieParser());
 // Routes
 app.use("/api/v1", userRoutes);
 app.use("/api/v1", postRoutes);
+app.use("/api/v1", likeRoutes);
+app.use("/api/v1", commentRoutes);
 
 
 

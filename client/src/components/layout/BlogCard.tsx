@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Card,
   CardContent,
@@ -6,38 +5,45 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { FormatDate } from "@/utils/FormatDate";
 import { Link } from "react-router-dom";
-import { Blog } from "types";
 
-interface BlogCardProps {
-    blog: Blog
-}
-
-
-const BlogCard: React.FC<BlogCardProps> = ({blog}) => {
-    const {id,title, author, date, views, content} = blog
+type Author = {
+  firstname: string;
+  lastname: string;
+  id: string;
+};
+type postPropTypes = {
+  id: string;
+  title: string;
+  content: string;
+  authorId: string;
+  createdAt: string;
+  updatedAt: string;
+  author: Author;
+};
+const BlogCard = ({ post }: { post: postPropTypes }) => {
   return (
-    <div className="flex flex-wrap gap-4 p-4 w-full">
-      <Link to={`/blog-details/${id}`}>
+    <div className="p-4 w-full">
+      <Link to={`/blog-details/${post?.id}`}>
         <Card>
           <CardHeader>
-            <CardTitle>
-              <Link to={`/blog-details/${id}`}>{title}</Link>
-            </CardTitle>
+            <CardTitle>{post?.title}</CardTitle>
             <CardDescription>
               <div className="flex flex-wrap gap-2">
-                <p>{author} | </p>
-                <p>{date} | </p>
-                <p>{views} Views</p>
+                <p>
+                  {post?.author?.firstname} {post?.author?.lastname} |{" "}
+                </p>
+                <p>{FormatDate(post?.updatedAt)}</p>
               </div>
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div>
               <p>
-                {content.length > 200
-                  ? content.substring(0, 200) + "..."
-                  : content}
+                {post?.content?.length > 200
+                  ? post?.content.substring(0, 200) + "..."
+                  : post?.content}
               </p>
             </div>
           </CardContent>

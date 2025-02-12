@@ -1,17 +1,21 @@
-import React from "react";
+import { Post } from "types";
 import { Button } from "../ui/button";
-import { Blog } from "types";
 import { Link, useNavigate } from "react-router-dom";
+import { useDeletePostMutation } from "@/redux/api/postApi";
 
-interface BlogPropTypes {
-  post: Blog;
-}
 
-const PostList: React.FC<BlogPropTypes> = ({ post }) => {
+const PostList = ({ post }:{post: Post}) => {
   const navigate = useNavigate();
+
+  const [deletePost,{isLoading:isDeleteLoading, }] = useDeletePostMutation();
+
+
   const handleEdit = () => {
     navigate(`/edit-post/${post?.id}`);
   };
+  const handleDelete = (id: string) => {
+    deletePost(id);
+  }
   return (
     <div className="flex flex-wrap gap-2 justify-between items-center mt-8 border p-4 shadow-sm rounded-md">
       <Link to={`/blog-details/${post?.id}`}>
@@ -21,7 +25,7 @@ const PostList: React.FC<BlogPropTypes> = ({ post }) => {
         <Button onClick={handleEdit} className="bg-blue-500 text-white">
           Edit
         </Button>
-        <Button className="bg-red-500 text-white">Delete</Button>
+        <Button onClick={()=>handleDelete(post?.id)} disabled={isDeleteLoading} className="bg-red-500 text-white">Delete</Button>
       </div>
     </div>
   );

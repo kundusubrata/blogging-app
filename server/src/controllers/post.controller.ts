@@ -108,10 +108,6 @@ export const getPosts = asyncHandler(
       },
     });
 
-    if (!posts.length) {
-      return next(new CustomErrorHandler("No posts found", 404));
-    }
-
     res.status(200).json({
       success: true,
       totalPosts,
@@ -137,6 +133,13 @@ export const getSinglePost = asyncHandler(
             lastname: true,
           },
         },
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+          },
+        },
+        comments: true,
       },
     });
 
@@ -147,6 +150,31 @@ export const getSinglePost = asyncHandler(
     res.status(200).json({
       success: true,
       post,
+    });
+  }
+);
+
+// Get My Posts  ===>>>> /api/v1/getmyposts
+export const myPosts = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.userId;
+
+    if (!userId) {
+      return next(new CustomErrorHandler("User not authenticated", 401));
+    }
+
+    const posts = await prisma.post.findMany({
+      where: {
+        authorId: userId,
+      },
+      include: {
+        author: true,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      posts,
     });
   }
 );
@@ -200,6 +228,18 @@ export const deletePost = asyncHandler(
     res.status(200).json({
       success: true,
       message: "Post deleted successfully",
+    });
+  }
+);
+
+// Admin all Posts   ====>>>> /api/v1/admin/allposts
+export const adminAllPost = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const posts = await prisma.post.findMany();
+
+    res.status(200).json({
+      success: true,
+      posts,
     });
   }
 );

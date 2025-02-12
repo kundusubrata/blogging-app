@@ -15,6 +15,8 @@ model User {
   password  String
   role      Role     @default(USER)
   posts     Post[]
+  likes     Like[]
+  comments  Comment[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -23,8 +25,32 @@ model Post {
   id        String   @id @default(cuid())
   title     String
   content   String
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  String?
+  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  comments  Comment[]
+  likes     Like[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+  post      Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, postId], name: "likedId")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  post      Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

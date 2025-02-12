@@ -1,5 +1,4 @@
-import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,18 +7,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
+import { useLazySignoutQuery } from "@/redux/api/userApi";
+import { User } from "types";
+// import { useAppDispatch } from "@/redux/hooks";
+// import { logout } from "@/redux/features/userSlice";
 
-const ProfileDropdown: React.FC = () => {
-  const admin = true;
+const ProfileDropdown = ({ user }: { user: User }) => {
+  const admin = user?.role === "ADMIN";
+  const navigate = useNavigate();
+  // const dispatch = useAppDispatch();
+
+  const [signout] = useLazySignoutQuery();
+
+  const handleSignout = () => {
+    signout();
+    // dispatch(logout());
+    navigate(0);
+  };
   return (
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar className="h-8 w-8">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>
+              {user?.firstname.charAt(0).toUpperCase() +
+                user?.lastname.charAt(0).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="mt-5">
@@ -42,7 +57,7 @@ const ProfileDropdown: React.FC = () => {
             </>
           )}
           <DropdownMenuItem>
-            <Button>Log Out</Button>
+            <Button onClick={handleSignout}>Log Out</Button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
