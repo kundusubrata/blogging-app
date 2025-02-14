@@ -28,10 +28,11 @@ const userSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
-    rehydrateUser: (state, action: PayloadAction<UserState>) => {
+
+    rehydrateUser: (_state, action: PayloadAction<UserState>) => {
       return {
         ...action.payload,
-        loading: false, // ✅ Reset loading to false after rehydration
+        loading: false,
       };
     },
     logout: (state) => {

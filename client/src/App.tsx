@@ -13,6 +13,7 @@ import EditPost from "./components/profile/EditPost";
 import { Toaster } from "sonner";
 import ScrollToTop from "./utils/ScrollToTop";
 import ProtectiveRoute from "./components/auth/ProtectiveRoute";
+import NotFound from "./components/layout/NotFound";
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
               </ProtectiveRoute>
             }
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
       <Footer />
