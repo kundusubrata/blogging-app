@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cd server && pnpm install && pnpm run build",
+    "build": "cd server && pnpm install && pnpm prisma generate && pnpm run build",
     "start": "cd server && pnpm start"
   },
   "keywords": [],
