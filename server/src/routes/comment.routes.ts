@@ -1,11 +1,11 @@
 import express from "express";
-import { isAuthencatedUser } from "../middlewares/auth";
 import { addComment, getComments } from "../controllers/comment.controller";
+import { isAuthenticatedUser } from "../middlewares/auth";
 
 
 const router = express.Router();
 
-router.route("/comment").post(isAuthencatedUser,addComment);
+router.route("/comment").post(isAuthenticatedUser,addComment);
 router.route("/:postId/comments").get(getComments);
 
 

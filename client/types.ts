@@ -17,6 +17,7 @@ export type Post = {
     comments: number;
   };
   comments: Comment[];
+  likes: Like[];
 };
 
 export type User = {
@@ -29,6 +30,14 @@ export type User = {
   updatedAt: string;
   posts: Post[];
   role: string;
+  likes: Like[];
+  comments: Comment[];
+};
+
+export type Like = {
+  id: string;
+  userId: string;
+  postId: string;
 };
 
 export type Comment = {
@@ -38,8 +47,8 @@ export type Comment = {
   postId: string;
   createdAt: string;
   updatedAt: string;
-  author: Author
-}
+  author: Author;
+};
 
 export type GetPostsResponse = {
   success: boolean;
@@ -59,13 +68,13 @@ export type GetLikeResponse = {
 
 export type AddCommentResponse = {
   success: boolean;
-  comment: Comment
-}
+  comment: Comment;
+};
 
 export type GetCommentsResponse = {
   success: boolean;
   comments: Comment[];
-}
+};
 
 export type AuthResponse = {
   success: boolean;
@@ -133,7 +142,7 @@ export type CreatePostRequest = {
 export type AddCommentRequest = {
   postId: string;
   content: string;
-}
+};
 
 export type EditPostRequest = {
   id: string;

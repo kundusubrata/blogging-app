@@ -4,12 +4,14 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useCreatePostMutation } from "@/redux/api/postApi";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 type FormState = {
   title: string;
   content: string;
 };
 const CreatePost = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormState>({
     title: "",
     content: "",
@@ -42,11 +44,11 @@ const CreatePost = () => {
         title: "",
         content: "",
       });
+      navigate("/");
     }
-  }, [isError, error, isSuccess]);
+  }, [isError, error, isSuccess, navigate]);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form data:", formData);
     createPost(formData);
   };
 

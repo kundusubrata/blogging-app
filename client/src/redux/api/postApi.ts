@@ -17,7 +17,7 @@ import {
 export const postApi = createApi({
   reducerPath: "postApi",
   baseQuery: fetchBaseQuery({ baseUrl: "/api/v1" }),
-  tagTypes: ["Post","Comment"],
+  tagTypes: ["Post", "Comment"],
   endpoints: (builder) => ({
     getPosts: builder.query<
       GetPostsResponse,
@@ -31,6 +31,7 @@ export const postApi = createApi({
           limit: params.limit,
         },
       }),
+      providesTags: ["Post"],
     }),
     getSinglePost: builder.query<GetSinglePostResponse, string>({
       query: (id) => `/getpost/${id}`,
@@ -44,17 +45,15 @@ export const postApi = createApi({
       }),
       invalidatesTags: ["Post"],
     }),
-    addComment: builder.mutation<AddCommentResponse,AddCommentRequest>({
+    addComment: builder.mutation<AddCommentResponse, AddCommentRequest>({
       query: ({ postId, content }) => ({
         url: "/comment",
         method: "POST",
         body: { postId, content },
       }),
-      invalidatesTags: ["Comment"],
     }),
     getComments: builder.query<GetCommentsResponse, string>({
       query: (postId) => `${postId}/comments`,
-      providesTags: ["Comment"],
     }),
     createPost: builder.mutation<CreatePostResponse, CreatePostRequest>({
       query: (body) => ({
@@ -62,6 +61,7 @@ export const postApi = createApi({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Post"],
     }),
     getMyPosts: builder.query<GetMyPostResponse, void>({
       query: () => "/getmyposts",

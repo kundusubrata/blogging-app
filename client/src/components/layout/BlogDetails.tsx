@@ -23,24 +23,22 @@ type Params = {
 const BlogDetails = () => {
   const { id } = useParams<Params>();
 
-  const { data, isLoading, isError, error } = useGetSinglePostQuery(id ?? skipToken);
+  const { data, isLoading, isError, error } = useGetSinglePostQuery(
+    id ?? skipToken
+  );
 
-  // console.log(id);
-  // console.log(data);
-  // console.log(data?.post?.updatedAt);
-
-
-  // if(error) return <p>Error in Fetching</p>
   useEffect(() => {
-    if(isError) {
-      if ('data' in error) {
-        toast.error((error.data as { message?: string })?.message || 'An error occurred');
+    if (isError) {
+      if ("data" in error) {
+        toast.error(
+          (error.data as { message?: string })?.message || "An error occurred"
+        );
       } else {
-        toast.error('An unexpected error occurred');
+        toast.error("An unexpected error occurred");
       }
     }
-  }, [isError, error])
-  if(isLoading) return <Loader />
+  }, [isError, error]);
+  if (isLoading) return <Loader />;
 
   return (
     <>
@@ -53,7 +51,10 @@ const BlogDetails = () => {
             </CardTitle>
             <CardDescription>
               <div className="flex flex-wrap gap-2">
-                <p>{data?.post?.author?.firstname} {data?.post?.author?.lastname} | </p>
+                <p>
+                  {data?.post?.author?.firstname} {data?.post?.author?.lastname}{" "}
+                  |{" "}
+                </p>
                 <p>{FormatDate(data?.post?.updatedAt as string)} | </p>
                 <p>{data?.post?._count?.likes} likes</p>
               </div>
@@ -62,7 +63,10 @@ const BlogDetails = () => {
           <CardContent>
             <div>
               <p>{data?.post?.content}</p>
-              <LikeButton postId={data?.post?.id || ""} />
+              <LikeButton
+                postId={data?.post?.id || ""}
+                likes={data?.post?.likes || []}
+              />
             </div>
           </CardContent>
         </Card>

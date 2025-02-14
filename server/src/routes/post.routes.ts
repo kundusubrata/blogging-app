@@ -1,27 +1,26 @@
 import express from "express";
-import { authorizeRoles, isAuthencatedUser } from "../middlewares/auth";
 import {
   adminAllPost,
-  bulkPost,
   createPost,
   deletePost,
   editPost,
   getPosts,
   getSinglePost,
-  myPosts,
+  myPosts
 } from "../controllers/post.controller";
+import { authorizeRoles, isAuthenticatedUser } from "../middlewares/auth";
 
 const router = express.Router();
 
-router.route("/bulkpost").post(isAuthencatedUser, bulkPost);
-router.route("/createpost").post(isAuthencatedUser, createPost);
+
+router.route("/createpost").post(isAuthenticatedUser, createPost);
 router.route("/getposts").get(getPosts);
 router.route("/getpost/:id").get(getSinglePost);
-router.route("/getmyposts").get(isAuthencatedUser, myPosts);
-router.route("/editpost/:id").put(isAuthencatedUser, editPost);
-router.route("/deletepost/:id").delete(isAuthencatedUser, deletePost);
+router.route("/getmyposts").get(isAuthenticatedUser, myPosts);
+router.route("/editpost/:id").put(isAuthenticatedUser, editPost);
+router.route("/deletepost/:id").delete(isAuthenticatedUser, deletePost);
 router
   .route("/admin/allposts")
-  .get(isAuthencatedUser, authorizeRoles("ADMIN"), adminAllPost);
+  .get(isAuthenticatedUser, authorizeRoles("ADMIN"), adminAllPost);
 
 export default router;

@@ -21,8 +21,7 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const [signin, { isLoading, isError, error, isSuccess }] =
-    useSigninMutation();
+  const [signin, { isLoading, isError, error }] = useSigninMutation();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
@@ -39,11 +38,7 @@ const SignIn = () => {
         toast.error("An unexpected error occurred");
       }
     }
-
-    if (isSuccess) {
-      toast.success("Login successful");
-    }
-  }, [isError, error, isSuccess, isAuthenticated, navigate]);
+  }, [isError, error, isAuthenticated, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -51,7 +46,6 @@ const SignIn = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // console.log("Form data:", formData);
     signin(formData);
     setFormData({ email: "", password: "" });
   };

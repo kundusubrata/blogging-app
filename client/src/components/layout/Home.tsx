@@ -25,8 +25,6 @@ const Home = () => {
     limit: 5,
   });
 
-  // console.log(data?.totalPages);
-  // console.log(data?.posts);
 
   const debouncedSearch = useCallback(
     debounce((value: string) => {

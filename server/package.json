@@ -10,6 +10,9 @@
     "server": "nodemon dist/index.js",
     "dev": "concurrently \"npm run watch\" \"npm run server\""
   },
+  "prisma": {
+    "seed": "ts-node src/seeder/seed.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -21,9 +24,11 @@
     "concurrently": "^9.1.2",
     "nodemon": "^3.1.9",
     "prisma": "^6.3.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.5.0",
     "@prisma/client": "6.3.0",
     "@types/bcrypt": "^5.0.2",
     "cookie-parser": "^1.4.7",

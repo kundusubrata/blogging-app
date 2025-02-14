@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useAppSelector } from "@/redux/hooks";
 import {
@@ -7,13 +7,25 @@ import {
 } from "@/redux/api/postApi";
 import { toast } from "sonner";
 
-
 const CommentSection = ({ postId }: { postId: string }) => {
   const [comment, setComment] = useState("");
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const { data, refetch } = useGetCommentsQuery(postId);
-  const [addComment] = useAddCommentMutation();
+  const [addComment, { isError, error }] = useAddCommentMutation();
 
+
+
+  useEffect(() => {
+    if (isError) {
+      if ("data" in error) {
+        toast.error(
+          (error.data as { message?: string })?.message || "An error occurred"
+        );
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    }
+  }, [error, isError]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

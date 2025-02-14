@@ -1,9 +1,8 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
+import prisma from "../config/prisma";
 import { asyncHandler } from "../middlewares/asyncHandler";
 import CustomErrorHandler from "../utils/customErrorHandler";
-import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
 
 // Add Comment  ===>>>> /api/v1/comment
 export const addComment = asyncHandler(
@@ -14,6 +13,18 @@ export const addComment = asyncHandler(
     if (!userId) {
       return next(new CustomErrorHandler("User not authenticated", 401));
     }
+
+    const existingComments = await prisma.comment.count({
+      where: {
+        authorId: userId,
+        postId,
+      },
+    });
+    
+    if (existingComments >= 1) { 
+      return next(new CustomErrorHandler("You can only comment 1 times per post", 400));
+    }
+    
 
     const comment = await prisma.comment.create({
       data: {
@@ -42,7 +53,11 @@ export const addComment = asyncHandler(
 // Get Comment for a post ===>>>> /api/v1/:postId/comments
 export const getComments = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const postId = req.params.id;
+    const postId = req.params.postId;
+
+    if(!postId) {
+      return next(new CustomErrorHandler("Post not found", 404));
+    }
 
     const comments = await prisma.comment.findMany({
       where: {

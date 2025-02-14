@@ -1,13 +1,22 @@
 import { useTogglePostMutation } from "@/redux/api/postApi";
 import { useAppSelector } from "@/redux/hooks";
 import { HeartIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Like } from "types";
 
-const LikeButton = ({ postId }: { postId: string }) => {
+const LikeButton = ({ postId, likes }: { postId: string; likes: Like[] }) => {
   const [liked, setLiked] = useState(false);
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const [likeCount, setLikeCount] = useState(likes.length);
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const [toggleLike, { isLoading }] = useTogglePostMutation();
+
+  useEffect(() => {
+    if (user) {
+      const isLiked = likes.some((like) => like.userId === user.id);
+      setLiked(isLiked);
+    }
+  }, [likes, user]);
 
   const handleLike = async () => {
     if (!isAuthenticated) {
@@ -17,6 +26,7 @@ const LikeButton = ({ postId }: { postId: string }) => {
 
     await toggleLike(postId);
     setLiked(!liked);
+    setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
   };
   return (
     <button
@@ -24,6 +34,7 @@ const LikeButton = ({ postId }: { postId: string }) => {
       className="flex items-center gap-2"
       disabled={isLoading}
     >
+      {likeCount}
       <HeartIcon
         className={`w-5 h-5 ${liked ? "text-red-500" : "text-gray-400"}`}
       />

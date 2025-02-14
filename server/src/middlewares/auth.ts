@@ -1,12 +1,10 @@
-import { Request, Response, NextFunction } from "express";
-import { asyncHandler } from "./asyncHandler";
+import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import prisma from "../config/prisma";
 import CustomErrorHandler from "../utils/customErrorHandler";
-import { PrismaClient } from "@prisma/client";
+import { asyncHandler } from "./asyncHandler";
 
-const prisma = new PrismaClient();
-
-export const isAuthencatedUser = asyncHandler(
+export const isAuthenticatedUser = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { token } = req.cookies;
     if (!token) {
@@ -19,7 +17,7 @@ export const isAuthencatedUser = asyncHandler(
       token,
       process.env.JWT_SECRET as string
     ) as JwtPayload;
-    // console.log(decoded);
+
     if (!decoded || !decoded.userId) {
       return next(new CustomErrorHandler("Invalid token", 401));
     }

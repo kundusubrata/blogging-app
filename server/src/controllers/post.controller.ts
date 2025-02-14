@@ -1,34 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
+import prisma from "../config/prisma";
 import { asyncHandler } from "../middlewares/asyncHandler";
+import { posts } from "../seeder/data";
 import CustomErrorHandler from "../utils/customErrorHandler";
 import { createPostBody, editPostBody } from "../utils/zodValidations";
-import { PrismaClient } from "@prisma/client";
-import { posts } from "../seeder/data";
-
-const prisma = new PrismaClient();
-
-// Bulk create posts  ===>>>> /api/v1/bulkpost
-export const bulkPost = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.userId;
-
-    if (!userId) {
-      return next(new CustomErrorHandler("User not authenticated", 401));
-    }
-
-    const postsWithUserId = posts.map((post) => ({
-      ...post,
-      authorId: userId,
-    }));
-
-    const result = await prisma.post.createMany({
-      data: postsWithUserId,
-      skipDuplicates: true,
-    });
-
-    res.status(201).json({ success: true, count: result.count });
-  }
-);
 
 // Create new post  ===>>>> /api/v1/createpost
 export const createPost = asyncHandler(
@@ -96,6 +71,9 @@ export const getPosts = asyncHandler(
       },
       skip,
       take: limitNumber,
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     // Only to count post that match the search
@@ -140,6 +118,11 @@ export const getSinglePost = asyncHandler(
           },
         },
         comments: true,
+        likes: {
+          select: {
+            userId: true,
+          },
+        },
       },
     });
 

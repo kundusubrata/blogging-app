@@ -1,11 +1,11 @@
-import express from "express";
-import "dotenv/config";
-import userRoutes from "./routes/user.routes";
-import postRoutes from "./routes/post.routes"
-import likeRoutes from "./routes/like.routes"
-import commentRoutes from "./routes/comment.routes"
 import cookieParser from "cookie-parser";
+import "dotenv/config";
+import express from "express";
 import { globalErrorMiddleware } from "./middlewares/globalErrorMiddleware";
+import commentRoutes from "./routes/comment.routes";
+import likeRoutes from "./routes/like.routes";
+import postRoutes from "./routes/post.routes";
+import userRoutes from "./routes/user.routes";
 
 const app = express();
 const port = process.env.PORT || 7000;

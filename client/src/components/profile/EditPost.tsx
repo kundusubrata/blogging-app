@@ -21,7 +21,6 @@ const EditPost = () => {
   const { data, isLoading: isFetching } = useGetSinglePostQuery(
     id ?? skipToken
   );
-  console.log(data);
   const [editPost, { isLoading: isUpdating, isSuccess, isError, error }] =
     useEditPostMutation();
 

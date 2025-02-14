@@ -1,9 +1,8 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
+import prisma from "../config/prisma";
 import { asyncHandler } from "../middlewares/asyncHandler";
 import CustomErrorHandler from "../utils/customErrorHandler";
-import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
 
 // Like/Unlike Post  ===>>>> /api/v1/likepost/:id
 export const toggleLike = asyncHandler(
@@ -11,7 +10,6 @@ export const toggleLike = asyncHandler(
     const { postId }: { postId: string } = req.body;
     const userId = req.userId;
 
-    console.log(postId);
 
     if (!userId) {
       return next(new CustomErrorHandler("User not authenticated", 401));

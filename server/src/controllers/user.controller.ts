@@ -1,15 +1,15 @@
-import { Request, Response, NextFunction } from "express";
-import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
+import { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import prisma from "../config/prisma";
 import { asyncHandler } from "../middlewares/asyncHandler";
+import CustomErrorHandler from "../utils/customErrorHandler";
 import {
   signinBody,
   signupBody,
   updateProfileBody,
 } from "../utils/zodValidations";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import CustomErrorHandler from "../utils/customErrorHandler";
-const prisma = new PrismaClient();
+
 
 // Register new user  ===>>>> /api/v1/signup
 export const signup = asyncHandler(
