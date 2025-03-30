@@ -36,9 +36,9 @@ The application uses Redux Toolkit for state management, while API requests are 
 ## Demonstration
 ### Screenshots
 - ![Blog Homepage](/client/public/blogging-app-homepage.png)
-- [Blog Details & Dropdown Details](/client/public/blogging-app-details-dropdown.png)
+- ![Blog Details & Dropdown Details](/client/public/blogging-app-details-dropdown.png)
 
-- [All posts only for admin](/client/public/blogging-app-all-posts.png)
+- ![All posts only for admin](/client/public/blogging-app-all-posts.png)
 
 ## Technologies
 -   Frontend: React, Vite, TailwindCSS, Shadcn.ui, Redux Toolkit, React Router
