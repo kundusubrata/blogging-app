@@ -1,0 +1,40 @@
+
+services:
+  backend:
+    image: blogging-app-backend
+    container_name: blogging-app-backend
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+      DATABASE_URL: "postgres://postgres:postgres@db:5432/blogging-app?schema=public"
+      JWT_SECRET: "520a575ebf164e2ef74729fd54c37b84173a77b93b213e7a49327952485df051"
+      JWT_COOKIE_EXPIRES_TIME: 7
+      JWT_EXPIRES_TIME: "86400"
+      NODE_ENV: "production"
+    command: sh -c "npx prisma migrate deploy && pnpm run start"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: blogging-app
+    ports:
+      - "5432:5432"
+    volumes:
+      - blogging-app-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      retries: 5
+
+volumes:
+  blogging-app-data:

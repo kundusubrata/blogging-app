@@ -11,7 +11,9 @@ const app = express();
 const port = process.env.PORT || 7000;
 
 import path from "path";
+import { rateLimiter } from "./middlewares/rateLimiter";
 
+app.use(rateLimiter);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -26,7 +28,6 @@ app.use(express.static(path.join(__dirname, "../../client/dist")));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../../client/dist/index.html"));
 });
-
 
 // Error Handling Middleware
 app.use(globalErrorMiddleware);
